@@ -5,10 +5,20 @@ let subscribers = {};
 // been registered in the subscribers object. If the event does not exist on the subscribers object, we know it hasn’t been registered and so we register it using the event name as the key and we initialize the value to an empty array. Lastly, we’ll push the subscriber callback into the event array.
 
 const subscribe = (e, callback) => {
+  let index;
+
   if (!subscribers[e]) {
     subscribers[e] = [];
   }
-  subscribers[e].push(callback);
+
+  index = subscribers[e].push(callback) - 1;
+
+  return {
+    unsubscribe() {
+      subscribers[e].splice(index, 1);
+    },
+  };
+  // subscribers[e].push(callback);
 };
 
 const publish = (e, data) => {
